@@ -5,8 +5,13 @@
     <title>Начальная страница</title>
 </head>
 <body>
-<a href="/login">Авторизация</a>
-<a href="/sign-up">Регистрация</a>
+{% if current_user.is_anonymous %}
+  <a href="{{ url_for('login') }}">Login</a>
+  <a href="{{ url_for('reg') }}">Sign Up</a>
+  <h1>Добро пожаловать, перед началом работы авторизируйтесь, или зарегестрируйтесь</h1>
+  {% else %}
+  <h1>Добро пожаловать, {{ current_user.login }}</h1>
+  <a href="{{ url_for('logout') }}">Logout</a>
+  {% endif %}
 </body>
-Hi {{ current_user.login }}!
 </html>
