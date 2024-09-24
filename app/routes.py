@@ -1,11 +1,11 @@
 from flask import render_template, redirect, url_for, flash, request, jsonify
 from flask_login import login_user, current_user, login_required, logout_user
 from app import app, db, login
-from app.forms import LoginForm, RegForm
+from app.forms import LoginForm, RegForm, TaskForm
 from app.models import Client
 import sqlalchemy as sa
 from urllib.parse import urlsplit
-
+import requests
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
@@ -57,3 +57,12 @@ def all_users():
     all_users = db.session.query(Client)
     response = [user.login for user in all_users]
     return jsonify(response)
+
+
+@app.route('/task-create')
+def task_create():
+    form = TaskForm()
+    all_users = db.session.query(Client).where(Client.login != current_user.login)
+    response = [user.login for user in all_users]
+    form.worker.choices = response
+    return render_template('taskCreate.html', form=form)
